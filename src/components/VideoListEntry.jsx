@@ -1,7 +1,8 @@
 
 var VideoListEntry = (props) => {
 
-  var { video } = props;
+  console.log(props);
+  var { video, handleVideoChange} = props;
 
   return (
     <div id= { video.id.videoId } className="video-list-entry media">
@@ -9,7 +10,7 @@ var VideoListEntry = (props) => {
       <img className="media-object" src={ video.snippet.thumbnails.default.url } alt="" />
       </div>
       <div className="media-body">
-        <div className="video-list-entry-title">{ video.snippet.title }</div>
+        <div onClick={() => {handleVideoChange(video)}} className="video-list-entry-title">{ video.snippet.title }</div>
         <div className="video-list-entry-detail">{ video.snippet.description }</div>
       </div>
     </div>
