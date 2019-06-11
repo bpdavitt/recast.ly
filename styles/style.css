@@ -90,6 +90,22 @@ h5 {
   padding: 10px;
 }
 
+#description {
+  overflow: hidden;
+  max-height: 100px;
+  transition: 1.5s
+}
+
+#description.show{
+  max-height:10000px;
+  transition: 1.5s
+}
+
+#downArrow {
+  cursor: pointer;
+}
+
+
 @media (max-width: 767px) {
   .video-list {
     margin-left: 20px;

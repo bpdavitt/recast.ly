@@ -13,7 +13,6 @@ const debouncedSearch = _.debounce((options, callback = () => {}, context) => {
 //     data: options,
 //     contentType: 'application/json',
 //     success: function(data){
-//       // console.log(data);
 //       callback(data, context);
 //     },
 //     error: function(data) {

@@ -6,6 +6,7 @@ import YOUTUBE_API_KEY from '../config/youtube.js'
 import Search from '../components/Search.js'
 import getVideoDescription from '../lib/getVideoDescription.js'
 
+
 class App extends React.Component{
   
   constructor(props) {
@@ -20,7 +21,6 @@ class App extends React.Component{
   }
 
   componentDidMount() {
-    console.log(getVideoDescription);
     var context = this;
     var options = {
       part: 'snippet',
@@ -30,13 +30,11 @@ class App extends React.Component{
     }
 
     debouncedSearch(options, function(data, context) {
-      console.log(data.items)
       context.setState({
         videoList: data.items,
         currentVideo: data.items[0]
       })
       getVideoDescription(data.items[0].id.videoId, options.key, function(description, context){
-        console.log(description, context);
         context.setState({
           currentVideoDescription: description
         })
@@ -47,13 +45,20 @@ class App extends React.Component{
   }
 
   handleVideoChange(video) {
+    var context = this;
+    console.log(video);
     this.setState({
       currentVideo: video
     });
+    getVideoDescription(video.id.videoId, YOUTUBE_API_KEY, function(description, context){
+      context.setState({
+        currentVideoDescription: description
+      })
+    }, context);
+
   }
 
   handleSearchInputChange(input) {
-    console.log(input.key);
     if(input.key === 'Enter') {
       this.handleSearchSubmit();
     } else {
@@ -63,7 +68,6 @@ class App extends React.Component{
   }
 
   handleSearchSubmit() {
-    // console.log(this.state.searchBox);
     var context = this;
     var options = {
       part: 'snippet',
@@ -77,7 +81,13 @@ class App extends React.Component{
         videoList: data.items,
         currentVideo: data.items[0]
       })
+      getVideoDescription(data.items[0].id.videoId, options.key, function(description, context){
+        context.setState({
+          currentVideoDescription: description
+        })
+      }, context);
     }, context)
+
 
   }
 
@@ -92,10 +102,10 @@ class App extends React.Component{
         </nav>
         <div className="row">
           <div className="col-md-7">
-            <div><h5><VideoPlayer video= { this.state.currentVideo}/></h5></div>
+            <div><h5><VideoPlayer video= { this.state.currentVideo} description= {this.state.currentVideoDescription}/></h5></div>
           </div>
           <div className="col-md-5">
-            <div><h5> <VideoList videos={ this.state.videoList } handleVideoChange= {this.handleVideoChange.bind(this)}/>view goes here</h5></div>
+            <div><h5> <VideoList videos={ this.state.videoList } handleVideoChange= {this.handleVideoChange.bind(this)}/></h5></div>
           </div>
         </div>
       </div>
