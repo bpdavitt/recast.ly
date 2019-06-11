@@ -5,6 +5,7 @@ import debouncedSearch from '../lib/searchYouTube.js'
 import YOUTUBE_API_KEY from '../config/youtube.js'
 import Search from '../components/Search.js'
 import getVideoDescription from '../lib/getVideoDescription.js'
+import loadAPIs from '../lib/loadAPIs.js'
 
 
 class App extends React.Component{
@@ -16,32 +17,12 @@ class App extends React.Component{
       currentVideo: exampleVideoData[0],
       currentVideoDescription: '',
       test: [],
-      searchBox: ''
+      searchBox: 'RickRoll'
     }
   }
 
-  componentDidMount() {
-    var context = this;
-    var options = {
-      part: 'snippet',
-      q: 'RickRoll',
-      max: 5,
-      key: YOUTUBE_API_KEY
-    }
-
-    debouncedSearch(options, function(data, context) {
-      context.setState({
-        videoList: data.items,
-        currentVideo: data.items[0]
-      })
-      getVideoDescription(data.items[0].id.videoId, options.key, function(description, context){
-        context.setState({
-          currentVideoDescription: description
-        })
-      }, context);
-    }, context)
-
-
+  componentWillMount() {
+    loadAPIs(this)
   }
 
   handleVideoChange(video) {
@@ -67,28 +48,8 @@ class App extends React.Component{
     
   }
 
-  handleSearchSubmit() {
-    var context = this;
-    var options = {
-      part: 'snippet',
-      q: this.state.searchBox,
-      max: 5,
-      key: YOUTUBE_API_KEY
-    }
-    
-    debouncedSearch(options, function(data, context) {
-      context.setState({
-        videoList: data.items,
-        currentVideo: data.items[0]
-      })
-      getVideoDescription(data.items[0].id.videoId, options.key, function(description, context){
-        context.setState({
-          currentVideoDescription: description
-        })
-      }, context);
-    }, context)
-
-
+  handleSearchSubmit () {
+   loadAPIs(this);
   }
 
   render() {
@@ -113,6 +74,9 @@ class App extends React.Component{
   }
   
 }
+
+
+
 
 // In the ES6 spec, files are "modules" and do not share a top-level scope
 // `var` declarations will only exist globally where explicitly defined

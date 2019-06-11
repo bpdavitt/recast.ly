@@ -1,10 +1,10 @@
-const debouncedSearch = _.debounce((options, callback = () => {}, context) => {
+const debouncedSearch = _.debounce((options, callback = () => {}) => {
 
   fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + options.q + '&max=5&key=' + options.key)
   .then(function(data) {
     return data.json()
   }).then(function(data){
-    callback(data, context)
+    callback(data)
   }), 500})
 
 //   $.ajax({
