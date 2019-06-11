@@ -1,11 +1,13 @@
-var searchYouTube = (options, callback = () => {}) => {
-
+var searchYouTube = (options, callback = () => {}, context) => {
   $.ajax({
     url: 'https://www.googleapis.com/youtube/v3/search',
     type: "GET",
-    data: {part: 'snippet', query: 'animals', max: 5, key: ''},
+    data: options,
     contentType: 'application/json',
-    success: function(data){console.log(data)},
+    success: function(data){
+      console.log(data);
+      callback(data, context);
+    },
     error: function(data) {
       console.error(data)
     }

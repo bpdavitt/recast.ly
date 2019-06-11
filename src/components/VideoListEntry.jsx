@@ -1,7 +1,6 @@
 
 var VideoListEntry = (props) => {
 
-  console.log(props);
   var { video, handleVideoChange} = props;
 
   return (
