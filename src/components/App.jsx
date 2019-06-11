@@ -1,7 +1,7 @@
 import VideoList from './VideoList.js'
 import { exampleVideoData } from '../data/exampleVideoData.js'
 import VideoPlayer from './VideoPlayer.js'
-import searchYouTube from '../lib/searchYouTube.js' 
+import debouncedSearch from '../lib/searchYouTube.js' 
 import YOUTUBE_API_KEY from '../config/youtube.js'
 import Search from '../components/Search.js'
 
@@ -21,12 +21,12 @@ class App extends React.Component{
     var context = this;
     var options = {
       part: 'snippet',
-      q: this.state.searchBox,
+      q: 'RickRoll',
       max: 5,
       key: YOUTUBE_API_KEY
     }
 
-    searchYouTube(options, function(data, context) {
+    debouncedSearch(options, function(data, context) {
       context.setState({
         videoList: data.items,
         currentVideo: data.items[0]
@@ -41,11 +41,32 @@ class App extends React.Component{
   }
 
   handleSearchInputChange(input) {
-    console.log(input);
+    console.log(input.key);
+    if(input.key === 'Enter') {
+      this.handleSearchSubmit();
+    } else {
+      this.setState({searchBox:input.target.value});
+    }
+    
   }
 
-  handleSearchSubmit(searchString) {
-    console.log(searchString);
+  handleSearchSubmit() {
+    // console.log(this.state.searchBox);
+    var context = this;
+    var options = {
+      part: 'snippet',
+      q: this.state.searchBox,
+      max: 5,
+      key: YOUTUBE_API_KEY
+    }
+    
+    debouncedSearch(options, function(data, context) {
+      context.setState({
+        videoList: data.items,
+        currentVideo: data.items[0]
+      })
+    }, context)
+
   }
 
   render() {
@@ -54,7 +75,7 @@ class App extends React.Component{
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
             <div><h5><Search handleChange={ this.handleSearchInputChange.bind(this)}
-            handleSubmit={ this.handleSearchSubmit.bind.this }/></h5></div>
+            handleSubmit={ this.handleSearchSubmit.bind(this) }/></h5></div>
           </div>
         </nav>
         <div className="row">
