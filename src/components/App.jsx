@@ -4,6 +4,7 @@ import VideoPlayer from './VideoPlayer.js'
 import debouncedSearch from '../lib/searchYouTube.js' 
 import YOUTUBE_API_KEY from '../config/youtube.js'
 import Search from '../components/Search.js'
+import getVideoDescription from '../lib/getVideoDescription.js'
 
 class App extends React.Component{
   
@@ -12,12 +13,14 @@ class App extends React.Component{
     this.state = {
       videoList: exampleVideoData,
       currentVideo: exampleVideoData[0],
+      currentVideoDescription: '',
       test: [],
       searchBox: ''
     }
   }
 
   componentDidMount() {
+    console.log(getVideoDescription);
     var context = this;
     var options = {
       part: 'snippet',
@@ -27,11 +30,20 @@ class App extends React.Component{
     }
 
     debouncedSearch(options, function(data, context) {
+      console.log(data.items)
       context.setState({
         videoList: data.items,
         currentVideo: data.items[0]
       })
+      getVideoDescription(data.items[0].id.videoId, options.key, function(description, context){
+        console.log(description, context);
+        context.setState({
+          currentVideoDescription: description
+        })
+      }, context);
     }, context)
+
+
   }
 
   handleVideoChange(video) {

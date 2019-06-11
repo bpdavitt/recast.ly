@@ -1,4 +1,4 @@
-import searchYouTube from '../../src/lib/searchYouTube.js';
+import debouncedSearch from '../../src/lib/searchYouTube.js';
 import YOUTUBE_API_KEY from '../../src/config/youtube.js';
 import exampleVideoData from '../../src/data/exampleVideoData.js';
 
@@ -54,13 +54,13 @@ describe('searchYouTube', function() {
   });
 
   it('should send a GET request', function() {
-    searchYouTube({}, () => {});
+    debouncedSearch({}, () => {});
 
     expect(requests[0].method).to.equal('GET');
   });
 
   it('should accept `key`, `query`, and `max` options and send them in GET request', function() {
-    searchYouTube({ key: 'API_KEY', query: 'cats', max: 10 }, () => {});
+    debouncedSearch({ key: 'API_KEY', query: 'cats', max: 10 }, () => {});
 
     var params = getURLSearchParams(requests[0].url);
     expect(params.key).to.equal('API_KEY');
@@ -80,7 +80,7 @@ describe('searchYouTube', function() {
     // We want this test to make a real AJAX request
     xhr.restore();
 
-    searchYouTube(options, (data) => {
+    debouncedSearch(options, (data) => {
       expect(hasSameShape(data, exampleVideoData)).to.be.true;
       done();
     });
